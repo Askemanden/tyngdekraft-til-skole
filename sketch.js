@@ -1,5 +1,6 @@
 let simulating = false;
-let selectedPlanet = -1
+
+let selectedPlanet = -1;
 
 let startMenu;
 
