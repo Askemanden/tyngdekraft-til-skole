@@ -117,7 +117,8 @@ class UIMenu{
       this.container = createDiv();
       this.buttonContainer = createDiv();
       this.menus = menus;
-      this.selected = 0;
+      console.log(this.menus)
+      this.selected = this.menus[Object.keys(menus)[0]];
   
       this.buttonContainer.style("display", "grid");
       this.buttonContainer.style("grid-template-columns", "auto ".repeat(Object.keys(menus).length).trim());
@@ -125,8 +126,6 @@ class UIMenu{
       this.container.position(position[0], position[1]);
       this.container.style("display", "table-column");
       this.container.child(this.buttonContainer)
-  
-      
   
       for(let name in menus){
         let button = createButton(name);
@@ -137,6 +136,7 @@ class UIMenu{
   
         button.mousePressed(
           () => {
+          console.log(this.selected)
           this.selected.hide();
           for(let button of this.buttonContainer.elt.children){
             button.style.backgroundColor = this.buttonColor;
@@ -146,6 +146,7 @@ class UIMenu{
           this.selected.show();
           }
         );
+        console.log(this.menus[name]);
         this.menus[name].hide();
         this.menus[name].parent(this.container);
         if(this.menus[name].getColor() == "rgb(255, 255, 255)"){
@@ -154,7 +155,6 @@ class UIMenu{
   
       }
       this.menus[Object.keys(menus)[0]].show();
-      this.selected = this.menus[Object.keys(menus)[0]];
       this.buttonContainer.elt.children[0].style.backgroundColor = this.selectedColor;
       this.buttonContainer.position(0, -25);
       if(submitCallback !== undefined){
