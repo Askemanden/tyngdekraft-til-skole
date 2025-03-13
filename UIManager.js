@@ -155,7 +155,6 @@ class UIMenu{
       }
       this.menus[Object.keys(menus)[0]].show();
       this.selected = this.menus[Object.keys(menus)[0]];
-      console.log(this.selected);
       this.buttonContainer.elt.children[0].style.backgroundColor = this.selectedColor;
       this.buttonContainer.position(0, -25);
       if(submitCallback !== undefined){
