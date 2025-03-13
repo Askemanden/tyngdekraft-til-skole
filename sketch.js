@@ -21,8 +21,10 @@ function setup() {
     deleteMenu = new UIMenu(
         [
             [createButton('delete').mouseClicked(()=>{
-                body.all.splice(selectedPlanet, 1);
-                selectedPlanet -= 1;
+                if(selectedPlanet >= 0){
+                    body.all.splice(selectedPlanet, 1);
+                    selectedPlanet -= 1;
+                }
             })],
             [createButton('next').mouseClicked(()=>{
                 selectedPlanet +=1
@@ -54,9 +56,9 @@ function setup() {
 function draw() {
     background(220, 220, 220);
     if(simulating) {
-    body.DrawPlanets();
-    body.applyGravityAll();
-    body.MovePlanets();
+        body.DrawPlanets();
+        body.applyGravityAll();
+        body.MovePlanets();
     }
     orbitControl();
   }
