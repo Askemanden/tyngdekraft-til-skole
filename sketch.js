@@ -11,12 +11,12 @@ let menuManager;
 
 function setup() { 
     createCanvas(800, 800, WEBGL); 
-/*    startMenu = new UIMenu( [
+    startMenu = new UIMenu( [
             [createButton('start').mouseClicked(()=>{simulating=true; startMenu.hide()})]
         ]
     )
     startMenu.container.size(windowWidth, windowHeight)
-*/
+
     deleteMenu = new UIMenu(
         [
             [createButton('delete').mouseClicked(()=>{
@@ -52,9 +52,10 @@ function setup() {
 
 function draw() {
     background(220, 220, 220);
+    if(simulating) {
     body.DrawPlanets();
     body.applyGravityAll();
     body.MovePlanets();
-    console.log();
+    }
     orbitControl();
   }
