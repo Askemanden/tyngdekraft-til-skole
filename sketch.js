@@ -53,6 +53,10 @@ function setup() {
     menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
 }
 
+// Create two planets
+let planet1 = new body(-200, -100, 0, 10, 100, 0, 0, 1.3);
+let planet2 = new body(0, 400, 0, 40, 20, 0, 0, 0);
+
 function draw() {
     background(220, 220, 220);
     if(simulating) {

@@ -67,9 +67,5 @@ class body{ // body is a class that represents a body in space
   }
 }
 
-// Create two planets
-let planet1 = new body(-200, -100, 0, 10, 100, 0, 0, 1.3);
-let planet2 = new body(0, 400, 0, 40, 20, 0, 0, 0);
-
 let deltaT = 5000000; //variable for the time step. Higher numbers will make the simulation faster, but less accurate
 
