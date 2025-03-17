@@ -55,7 +55,7 @@ function setup() {
 
 // Create two planets
 let planet1 = new body(-200, -100, 0, 10, 100, 0, 0, 1.3);
-let planet2 = new body(0, 400, 0, 40, 20, 0, 0, 0);
+let planet2 = new body(0, 0, 0, 40, 20, 0, 0, 0);
 
 function draw() {
     background(220, 220, 220);
