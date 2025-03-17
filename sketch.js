@@ -61,7 +61,7 @@ function draw() {
     background(220, 220, 220);
     if(simulating) {
         body.DrawPlanets();
-        body.applyGravityAll();
+        body.ApplyGravityAll();
         body.MovePlanets();
     }
     orbitControl();
