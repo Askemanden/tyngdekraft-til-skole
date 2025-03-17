@@ -19,13 +19,13 @@ class body{ // body is a class that represents a body in space
   GetMass(density, radius) { return(density*4/3*Math.PI*radius**3); } // Returns the mass of the body
   GetDistance(other) { return(Math.sqrt((other.x-this.x)**2+(other.y-this.y)**2+(other.z-this.z)**2)); } // Returns the distance between two bodies
 
-  static applyGravityAll(){
+  static ApplyGravityAll(){
     for(let p of body.all) {
       p.applyGravity();
     }
   }
 
-  applyGravity() { // Applies gravity to the body
+  ApplyGravity() { // Applies gravity to the body
     for (let i = 0; i < body.all.length; i++) {
       if (body.all[i] !== this) {
         let distance = this.GetDistance(body.all[i]); // Distance between the two bodies
@@ -38,6 +38,16 @@ class body{ // body is a class that represents a body in space
       }
     }
   }
+
+  CheckCollision(other) { // Checks if two bodies have collided
+    let distance = this.GetDistance(other);
+    if (distance < this.GetRadius(this.mass, this.denisty) + other.GetRadius(other.mass, other.denisty)) {
+      return true;
+    }
+    return false;
+  }
+
+
 
   static MovePlanets() {  // Moves all the planets
     for(let p of body.all) {
