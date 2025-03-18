@@ -22,7 +22,7 @@ class body{ // body is a class that represents a body in space
   
   static ApplyGravityAll(){
     for(let p of body.all) {
-      p.applyGravity();
+      p.ApplyGravity();
     }
   }
 
