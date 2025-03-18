@@ -5,15 +5,15 @@ const keyCodes = {
     "D" : 68,
     "Q" : 81,
     "E" : 69,
-    "SPACE" : 32,
-    "L" : 76
+    "Esc" : 27,
+    "LeftArrow" : 37,
+    "RightArrow" : 38
 }
-
 const camSensitivity = 1;
 
 const camSpeed = 1;
 
-let cam = createCamera();
+let cam;
 
 let camFocus = -1;
 
@@ -31,8 +31,8 @@ function updateCamera() {
     let rotation = [0,0];
 
     // forward backwards movement
-    movement[2] +=int(keyIsDown(keyCode["W"]));
-    movement[2] -=int(keyIsDown(keyCode["S"]));
+    movement[2] -=int(keyIsDown(keyCode["W"]));
+    movement[2] +=int(keyIsDown(keyCode["S"]));
     // left right movement
     movement[0] +=int(keyIsDown(keyCode["D"]));
     movement[0] -=int(keyIsDown(keyCode["A"]));
@@ -57,7 +57,9 @@ function updateCamera() {
 
     cam.pan(rotation[0]);
     cam.tilt(rotation[1]);
+}
 
+function cameraFocus(){
     if(camFocus !== -1 && camFocus < body.all.length) {
         cam.lookAt(body.all[camFocus].x, body.all[camFocus].y, body.all[camFocus].z);
     }

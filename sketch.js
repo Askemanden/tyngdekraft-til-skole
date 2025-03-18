@@ -10,6 +10,22 @@ let createMenu;
 
 let menuManager;
 
+function updateSelected(){
+    if(keyIsDown(keyCodes["Esc"])){
+        selectedPlanet = -1;
+    } else if(keyIsDown(keyCodes["LeftArrow"])){
+        selectedPlanet -=1
+        if(selectedPlanet < 0){
+            selectedPlanet = body.all.length - 1
+        }
+    } else if(keyIsDown(keyCodes["RightArrow"])){
+        selectedPlanet +=1
+        if(selectedPlanet >= body.all.length){
+            selectedPlanet = 0
+        }
+    }
+}
+
 function setup() { 
     createCanvas(800, 800, WEBGL); // Makes a background, and WebGL makes the background 3D
     startMenu = new UIMenu( [
@@ -49,6 +65,8 @@ function setup() {
         ]
     )
 
+    cam = createCamera();
+
 
     menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
 }
@@ -63,6 +81,8 @@ function draw() {
         body.DrawPlanets();
         body.ApplyGravityAll();
         body.MovePlanets();
+        updateCamera();
     }
-    orbitControl();
+    setFocus(selectedPlanet);
+    cameraFocus();
   }
