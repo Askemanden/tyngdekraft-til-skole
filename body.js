@@ -18,7 +18,8 @@ class body{ // body is a class that represents a body in space
   GetRadius(mass, density) { return(Math.cbrt(mass/((3/4)*3.1416*density))); } // Returns the radius of the body
   GetMass(density, radius) { return(density*4/3*Math.PI*radius**3); } // Returns the mass of the body
   GetDistance(other) { return(Math.sqrt((other.x-this.x)**2+(other.y-this.y)**2+(other.z-this.z)**2)); } // Returns the distance between two bodies
-
+  GetForce(other) { return(body.G*this.mass*other.mass/(this.GetDistance(other)**2)); } // Returns the gravitational force between two bodies
+  
   static ApplyGravityAll(){
     for(let p of body.all) {
       p.applyGravity();
@@ -30,11 +31,11 @@ class body{ // body is a class that represents a body in space
       if (body.all[i] !== this) {
         let distance = this.GetDistance(body.all[i]); // Distance between the two bodies
         if (distance < this.radius) { distance = this.radius; } // Prevents division by zero, and excessive forces
-        let force = (body.G*(body.all[i].mass)/(distance**2));  // Gravitational force between bodies
+        let force = GetForce(body.all[i]);  // Gravitational force between bodies
         let difVector = [(body.all[i].x-this.x)/distance, (body.all[i].y-this.y)/distance, (body.all[i].z-this.z)/distance]; // Vector pointing from this body to another body, with a length of 1
-        this.vx += force * difVector[0] * deltaT;
-        this.vy += force * difVector[1] * deltaT;
-        this.vz += force * difVector[2] * deltaT;
+        this.vx += force * difVector[0] / this.mass * deltaT;
+        this.vy += force * difVector[1] / this.mass * deltaT;
+        this.vz += force * difVector[2] / this.mass * deltaT;
       }
     }
   }
@@ -46,8 +47,10 @@ class body{ // body is a class that represents a body in space
     }
     return false;
   }
-
-
+  
+  resolveCollision(other) { // Resolves a collision between two bodies
+  
+  }
 
   static MovePlanets() {  // Moves all the planets
     for(let p of body.all) {
