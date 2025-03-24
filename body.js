@@ -31,7 +31,7 @@ class body{ // body is a class that represents a body in space
       if (body.all[i] !== this) {
         let distance = this.GetDistance(body.all[i]); // Distance between the two bodies
         if (distance < this.radius) { distance = this.radius; } // Prevents division by zero, and excessive forces
-        let force = GetForce(body.all[i]);  // Gravitational force between bodies
+        let force = this.GetForce(body.all[i]);  // Gravitational force between bodies
         let difVector = [(body.all[i].x-this.x)/distance, (body.all[i].y-this.y)/distance, (body.all[i].z-this.z)/distance]; // Vector pointing from this body to another body, with a length of 1
         this.vx += force * difVector[0] / this.mass * deltaT;
         this.vy += force * difVector[1] / this.mass * deltaT;
@@ -58,9 +58,9 @@ class body{ // body is a class that represents a body in space
     }
   }
   MovePlanet() {  // Moves the planet
-    this.x += this.vx;
-    this.y += this.vy;
-    this.z += this.vz;
+    this.x += this.vx ;
+    this.y += this.vy ;
+    this.z += this.vz ;
   }
   static DrawPlanets() {  // Draws all the planets
     for(let p of body.all) {
@@ -80,5 +80,5 @@ class body{ // body is a class that represents a body in space
   }
 }
 
-let deltaT = 5000000; //variable for the time step. Higher numbers will make the simulation faster, but less accurate
+let deltaT = 1; //variable for the time step. Higher numbers will make the simulation faster, but less accurate
 

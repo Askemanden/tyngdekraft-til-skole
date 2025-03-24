@@ -1,8 +1,6 @@
-let simulating = false;
+let simulating = true;
 
 let selectedPlanet = -1;
-
-let startMenu;
 
 let deleteMenu;
 
@@ -28,12 +26,6 @@ function updateSelected(){
 
 function setup() { 
     createCanvas(800, 800, WEBGL); // Makes a background, and WebGL makes the background 3D
-    startMenu = new UIMenu( [
-            [createButton('start').mouseClicked(()=>{simulating=true; startMenu.hide()})]
-        ]
-    )
-    startMenu.container.size(windowWidth, windowHeight)
-
     deleteMenu = new UIMenu(
         [
             [createButton('delete').mouseClicked(()=>{
@@ -72,8 +64,8 @@ function setup() {
 }
 
 // Create two planets, with coordinates for each planet
-let planet1 = new body(-200, -100, 0, 10, 100, 0, 0, 1.3);
-let planet2 = new body(0, 0, 0, 40, 20, 0, 0, 0);
+let planet1 = new body(-200, -100, 0, 100, 100, 0, 0, 1.3);
+let planet2 = new body(0, 0, 0, 40, 200, 0, 0, 0);
 
 function draw() {
     background(220, 220, 220);
