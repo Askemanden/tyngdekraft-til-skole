@@ -19,7 +19,10 @@ let cam;
 
 let camFocus = -1;
 
+let previousFocus = -1;
+
 function setFocus(newFocus) {
+    previousFocus = newFocus;
     if(newFocus < body.all.length) {
         camFocus = newFocus;
     }
