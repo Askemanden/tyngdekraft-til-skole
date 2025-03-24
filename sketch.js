@@ -64,7 +64,7 @@ function setup() {
 }
 
 // Create two planets, with coordinates for each planet
-let planet1 = new body(-200, -100, 0, 100, 100, 0, 0, 1.3);
+let planet1 = new body(-200, -100, 0, 100, 100);
 let planet2 = new body(0, 0, 0, 40, 200, 0, 0, 0);
 
 function draw() {
