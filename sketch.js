@@ -58,7 +58,7 @@ function setup() {
             [createButton('Submit').size(170)]
         ]
     )
-
+    
     cam = createCamera();
 
 
