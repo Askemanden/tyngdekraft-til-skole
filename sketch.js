@@ -66,12 +66,15 @@ function setup() {
 
 let planet1 = new body(0, 0, 0, 200, 20, 0, 0, 0);
 let planet2 = new body(500, 300, 0, 10, 1, 0, 0, 7);
+let planet3 = new body(700, 700, 700, 200, 20, 0, 0, 0);
 
 function draw() {
     background(220, 220, 220);
     if(simulating) {
         body.DrawPlanets();
         body.ApplyGravityAll();
+        ResolveCollisions();
+
         body.MovePlanets();
         updateCamera();
     }
