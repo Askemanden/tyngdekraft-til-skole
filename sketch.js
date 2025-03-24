@@ -53,7 +53,9 @@ function setup() {
         [
             [createP('coordinates')],
             [createP('x'), createInput(0, 'number').size(75), createP('y'), createInput(0, 'number').size(75), createP('z'), createInput(0, 'number').size(75)],
-            [createP('radius'), createInput(50, 'number').size(75)]
+            [createP('radius'), createInput(0, 'number').size(75)],
+            [createP('density'), createInput(0,'number').size(75)],
+            [createButton('Submit').size(170)]
         ]
     )
 
