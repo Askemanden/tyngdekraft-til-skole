@@ -65,9 +65,8 @@ function setup() {
     menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
 }
 
-// Create two planets, with coordinates for each planet
-let planet1 = new body(-200, -100, 0, 100, 100, 0, 0, 1.3);
-let planet2 = new body(0, 0, 0, 40, 200, 0, 0, 0);
+let planet1 = new body(0, 0, 0, 200, 20, 0, 0, 0);
+let planet2 = new body(500, 300, 0, 10, 1, 0, 0, 7);
 
 function draw() {
     background(220, 220, 220);

@@ -7,17 +7,22 @@ const keyCodes = {
     "E" : 69,
     "Esc" : 27,
     "LeftArrow" : 37,
-    "RightArrow" : 38
+    "RightArrow" : 38,
+    "DownArrow" : 40,
+    "UpArrow" : 39
 }
-const camSensitivity = 1;
+const camSensitivity = 0.003;
 
-const camSpeed = 1;
+const camSpeed = 10;
 
 let cam;
 
 let camFocus = -1;
 
+let previousFocus = -1;
+
 function setFocus(newFocus) {
+    previousFocus = newFocus;
     if(newFocus < body.all.length) {
         camFocus = newFocus;
     }
@@ -31,14 +36,15 @@ function updateCamera() {
     let rotation = [0,0];
 
     // forward backwards movement
-    movement[2] -=int(keyIsDown(keyCode["W"]));
-    movement[2] +=int(keyIsDown(keyCode["S"]));
+    movement[2] -=int(keyIsDown(keyCodes["W"]));
+    movement[2] +=int(keyIsDown(keyCodes["S"]));
     // left right movement
-    movement[0] +=int(keyIsDown(keyCode["D"]));
-    movement[0] -=int(keyIsDown(keyCode["A"]));
+    movement[0] +=int(keyIsDown(keyCodes["D"]));
+    movement[0] -=int(keyIsDown(keyCodes["A"]));
     // up down movement
-    movement[1] +=int(keyIsDown(keyCode["E"]));
-    movement[1] -=int(keyIsDown(keyCode["Q"]));
+    movement[1] +=int(keyIsDown(keyCodes["E"]));
+    movement[1] -=int(keyIsDown(keyCodes["Q"]));
+
     
     // normalize movemnt
     let movementMagnitude = sqrt(movement[0]*movement[0] + movement[1]*movement[1] + movement[2]*movement[2]);
@@ -47,11 +53,16 @@ function updateCamera() {
             movement[i] = movement[i]/movementMagnitude;
         }
     }
-    movement *= camSpeed
 
-    // rotation
-    rotation[0] += (mouseX - pmouseX) * camSensitivity;
-    rotation[1] += (mouseY - pmouseY) * camSensitivity;
+    movement[0] *= camSpeed;
+    movement[1] *= camSpeed;
+    movement[2] *= camSpeed;
+
+    if(mouseIsPressed){
+        // rotation
+        rotation[0] += (mouseX - pmouseX) * camSensitivity;
+        rotation[1] -= (mouseY - pmouseY) * camSensitivity;
+    }
 
     cam.move(movement[0], movement[1], movement[2]);
 
