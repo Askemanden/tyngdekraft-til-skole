@@ -12,6 +12,15 @@ let leftUp = true;
 
 let rightUp = true;
 
+let inputRadius;
+
+let inputDensity;
+
+let inputX;
+
+let inputY;
+
+let inputZ;
 function updateSelected(){
     if(keyIsDown(keyCodes["Esc"])){
         selectedPlanet = -1;
@@ -56,10 +65,19 @@ function setup() {
     createMenu = new UIMenu( // makes a menu, where you can change a y, x, or z coordinate
         [
             [createP('coordinates')],
-            [createP('x'), createInput(0, 'number').size(75), createP('y'), createInput(0, 'number').size(75), createP('z'), createInput(0, 'number').size(75)],
-            [createP('radius'), createInput(0, 'number').size(75)],
-            [createP('density'), createInput(0,'number').size(75)],
-            [createButton('Submit').size(165)]
+            [createP('x'), inputX = createInput(0, 'number').size(75), createP('y'), inputY = createInput(0, 'number').size(75), createP('z'), inputZ = createInput(0, 'number').size(75)],
+            [createP('radius'), inputRadius = createInput(0, 'number').size(75)],
+            [createP('density'), inputDensity = createInput(0,'number').size(75)],
+            [createButton('Submit').size(165).mousePressed(() => {
+                let newData = {
+                    x: inputX.value(),
+                    y: inputY.value(),
+                    z: inputZ.value(),
+                    radius: inputRadius.value(),
+                    density: inputDensity.value(),
+                }
+
+            })]
         ]
     )
     cam = createCamera();
