@@ -7,9 +7,9 @@ const keyCodes = {
     "E" : 69,
     "Esc" : 27,
     "LeftArrow" : 37,
-    "RightArrow" : 38,
+    "RightArrow" : 39,
     "DownArrow" : 40,
-    "UpArrow" : 39
+    "UpArrow" : 38
 }
 const camSensitivity = 0.003;
 
@@ -42,8 +42,8 @@ function updateCamera() {
     movement[0] +=int(keyIsDown(keyCodes["D"]));
     movement[0] -=int(keyIsDown(keyCodes["A"]));
     // up down movement
-    movement[1] +=int(keyIsDown(keyCodes["E"]));
-    movement[1] -=int(keyIsDown(keyCodes["Q"]));
+    movement[1] +=int(keyIsDown(keyCodes["Q"]));
+    movement[1] -=int(keyIsDown(keyCodes["E"]));
 
     
     // normalize movemnt
@@ -72,6 +72,8 @@ function updateCamera() {
 
 function cameraFocus(){
     if(camFocus !== -1 && camFocus < body.all.length) {
-        cam.lookAt(body.all[camFocus].x, body.all[camFocus].y, body.all[camFocus].z);
+        if (!(cam.z-cam.centerZ >= 300 || cam.z-cam.centerZ <= -300)) {
+            cam.lookAt(body.all[camFocus].x, body.all[camFocus].y, body.all[camFocus].z);
+        }
     }
 }

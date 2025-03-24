@@ -8,6 +8,10 @@ let createMenu;
 
 let menuManager;
 
+let leftUp = true;
+
+let rightUp = true;
+
 function updateSelected(){
     if(keyIsDown(keyCodes["Esc"])){
         selectedPlanet = -1;
@@ -65,6 +69,23 @@ function setup() {
 
 let planet1 = new body(0, 0, 0, 200, 20, 0, 0, 0);
 let planet2 = new body(500, 300, 0, 10, 1, 0, 0, 7);
+
+function keyReleased() {
+    if (keyCode === keyCodes["UpArrow"]) {
+        selectedPlanet = -1;
+    } else if (keyCode === keyCodes["LeftArrow"]) {
+        selectedPlanet -= 1;
+        if (selectedPlanet < 0) {
+            selectedPlanet = body.all.length - 1;
+        }
+    } else if (keyCode === keyCodes["RightArrow"]) {
+        selectedPlanet += 1;
+        if (selectedPlanet >= body.all.length) {
+            selectedPlanet = 0;
+        }
+    }
+}
+
 
 function draw() {
     background(220, 220, 220);
