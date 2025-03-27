@@ -8,6 +8,19 @@ let createMenu;
 
 let menuManager;
 
+let leftUp = true;
+
+let rightUp = true;
+
+let inputRadius;
+
+let inputDensity;
+
+let inputX;
+
+let inputY;
+
+let inputZ;
 function updateSelected(){
     if(keyIsDown(keyCodes["Esc"])){
         selectedPlanet = -1;
@@ -52,10 +65,19 @@ function setup() {
     createMenu = new UIMenu( // makes a menu, where you can change a y, x, or z coordinate
         [
             [createP('coordinates')],
-            [createP('x'), createInput(0, 'number').size(75), createP('y'), createInput(0, 'number').size(75), createP('z'), createInput(0, 'number').size(75)],
-            [createP('radius'), createInput(0, 'number').size(75)],
-            [createP('density'), createInput(0,'number').size(75)],
-            [createButton('Submit').size(165)]
+            [createP('x'), inputX = createInput(0, 'number').size(75), createP('y'), inputY = createInput(0, 'number').size(75), createP('z'), inputZ = createInput(0, 'number').size(75)],
+            [createP('radius'), inputRadius = createInput(0, 'number').size(75)],
+            [createP('density'), inputDensity = createInput(0,'number').size(75)],
+            [createButton('Submit').size(165).mousePressed(() => {
+                let newData = {
+                    x: inputX.value(),
+                    y: inputY.value(),
+                    z: inputZ.value(),
+                    radius: inputRadius.value(),
+                    density: inputDensity.value(),
+                }
+
+            })]
         ]
     )
     cam = createCamera();
@@ -67,6 +89,23 @@ function setup() {
 let planet1 = new body(0, 0, 0, 200, 20, 0, 0, 0);
 let planet2 = new body(500, 300, 0, 10, 1, 0, 0, 7);
 let planet3 = new body(700, 700, 700, 200, 20, 0, 0, 0);
+
+function keyReleased() {
+    if (keyCode === keyCodes["UpArrow"]) {
+        selectedPlanet = -1;
+    } else if (keyCode === keyCodes["LeftArrow"]) {
+        selectedPlanet -= 1;
+        if (selectedPlanet < 0) {
+            selectedPlanet = body.all.length - 1;
+        }
+    } else if (keyCode === keyCodes["RightArrow"]) {
+        selectedPlanet += 1;
+        if (selectedPlanet >= body.all.length) {
+            selectedPlanet = 0;
+        }
+    }
+}
+
 
 function draw() {
     background(220, 220, 220);
