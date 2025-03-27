@@ -21,6 +21,7 @@ let inputX;
 let inputY;
 
 let inputZ;
+
 function updateSelected(){
     if(keyIsDown(keyCodes["Esc"])){
         selectedPlanet = -1;
@@ -75,8 +76,8 @@ function setup() {
                     z: inputZ.value(),
                     radius: inputRadius.value(),
                     density: inputDensity.value(),
+                    
                 }
-
             })]
         ]
     )
@@ -88,7 +89,7 @@ function setup() {
 
 let planet1 = new body(0, 0, 0, 200, 20, 0, 0, 0);
 let planet2 = new body(500, 300, 0, 10, 1, 0, 0, 7);
-let planet3 = new body(700, 700, 700, 200, 20, 0, 0, 0);
+//let planet3 = new body(700, 700, 700, 200, 20, 0, 0, 0);
 
 function keyReleased() {
     if (keyCode === keyCodes["UpArrow"]) {
@@ -112,7 +113,7 @@ function draw() {
     if(simulating) {
         body.DrawPlanets();
         body.ApplyGravityAll();
-        ResolveCollisions();
+        //ResolveCollisions();
 
         body.MovePlanets();
         updateCamera();

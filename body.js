@@ -41,7 +41,7 @@ class body { // body is a class that represents a body in space
       if (body.all[i] !== this) {
         let distance = this.GetDistance(body.all[i]); // Distance between the two bodies
         if (distance < this.radius) { distance = this.radius; } // Prevents division by zero, and excessive forces
-        let force = body.G*(body.all[i].mass)/(this.GetDistance(body.all[i])**2); // Gravitational force between bodies
+        let force = body.G*(body.all[i].mass)/(distance)**2; // Gravitational force between bodies
         let difVector = this.GetVector(body.all[i]); // Vector pointing from this body to another body, with a length of 1
         this.vx += force * difVector[0] * deltaT;
         this.vy += force * difVector[1] * deltaT;
