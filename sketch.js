@@ -6,6 +6,8 @@ let deleteMenu;
 
 let createMenu; 
 
+let createRealPlanetMenu;
+
 let menuManager;
 
 let leftUp = true;
@@ -16,11 +18,6 @@ let inputRadius;
 
 let inputDensity;
 
-let inputX;
-
-let inputY;
-
-let inputZ;
 
 function updateSelected(){
     if(keyIsDown(keyCodes["Esc"])){
@@ -63,28 +60,57 @@ function setup() {
         ]
     )
 
+    let inputX = createInput(0, 'number').size(75)
+    
+    let inputY = createInput(0, 'number').size(75)
+    
+    let inputZ = createInput(0, 'number').size(75)
+    inputRadius = createInput(0, 'number').size(75)
+    inputDensity = createInput(0,'number').size(75)
+
     createMenu = new UIMenu( // makes a menu, where you can change a y, x, or z coordinate
         [
-            [createP('coordinates')],
-            [createP('x'), inputX = createInput(0, 'number').size(75), createP('y'), inputY = createInput(0, 'number').size(75), createP('z'), inputZ = createInput(0, 'number').size(75)],
-            [createP('radius'), inputRadius = createInput(0, 'number').size(75)],
-            [createP('density'), inputDensity = createInput(0,'number').size(75)],
+            [createP('coordinates in km from center')],
+            [createP('x'), inputX, createP('y'), inputY, createP('z'), inputZ],
+            [createP('radius in meters'), inputRadius],
+            [createP('density in kilos per cubic meter'), inputDensity],
             [createButton('Submit').size(165).mousePressed(() => {
-                let newData = {
-                    x: inputX.value(),
-                    y: inputY.value(),
-                    z: inputZ.value(),
-                    radius: inputRadius.value(),
-                    density: inputDensity.value(),
-                    
-                }
+                new body(
+                    parseFloat(inputX.value()),
+                    parseFloat(inputY.value()),
+                    parseFloat(inputZ.value()),
+                    parseFloat(inputRadius.value()),
+                    parseFloat(inputDensity.value()),
+                    0, 0, 0
+                );
+            })]
+        ]
+    )
+
+    let realInputX = createInput(0, 'number').size(75)
+    let realInputY = createInput(0, 'number').size(75)
+    let realInputZ = createInput(0, 'number').size(75)
+    let planetName = createInput().size(75)
+
+    createRealPlanetMenu = new UIMenu(
+        [
+            [createP('coordinates in km from center')],
+            [createP('x'), realInputX, createP('y'), realInputY, createP('z'), realInputZ],
+            [createP('planet name'), planetName],
+            [createButton('Submit').size(165).mousePressed(() => {
+                fetchData(
+                    planetName.value(),
+                    parseFloat(realInputX.value()),
+                    parseFloat(realInputY.value()),
+                    parseFloat(realInputZ.value())
+                );
             })]
         ]
     )
     cam = createCamera();
 
 
-    menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
+    menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu, createRealPlanetMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
 }
 
 let planet1 = new body(0, 0, 0, 200, 20, 0, 0, 0);
@@ -110,8 +136,14 @@ function keyReleased() {
 
 function draw() {
     background(220, 220, 220);
+    if(menuManager.selected!==menuManager.menus[0]){
+        simulating=false;
+    } else{
+        simulating=true;
+    }
+    body.DrawPlanets();
     if(simulating) {
-        body.DrawPlanets();
+        
         body.ApplyGravityAll();
         //ResolveCollisions();
 
