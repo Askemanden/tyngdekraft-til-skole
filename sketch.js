@@ -143,11 +143,16 @@ function draw() {
     }
     body.DrawPlanets();
     if(simulating) {
-        
+        // Applies the gravity to all bodies
         body.ApplyGravityAll();
-        //ResolveCollisions();
 
+        // Checks and calculates the collisions between all bodies
+        body.CheckAndResolveCollisions();
+
+        // Moves the bodies according to their velocity and acceleration
         body.MovePlanets();
+        
+        // Updates the camera position and focus
         updateCamera();
     }
     setFocus(selectedPlanet);
