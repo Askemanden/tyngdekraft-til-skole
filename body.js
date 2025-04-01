@@ -32,7 +32,7 @@ class body { // body is a class that represents a body in space
     }
   }
 
-  GetRadius(mass, density) { return(Math.cbrt(mass/((3/4)*3.1416*density))); } // Returns the radius of the body
+  GetRadius(mass, density = 1) { return(Math.cbrt(mass/((3/4)*3.1416*density))); } // Returns the radius of the body
   GetMass(density, radius) { return(density*4/3*Math.PI*radius**3); } // Returns the mass of the body
   GetDistance(other) { return(Math.sqrt((other.x-this.x)**2+(other.y-this.y)**2+(other.z-this.z)**2)); } // Returns the distance between two bodies, using the Pythagorean theorem
   GetGravitationalForce() { return(this.mass*simulation.G); } // Returns the force of the body
@@ -126,13 +126,12 @@ function GetRandomNormalVector(v) { // Generer en tilfældig vektor, og finde kr
 
 function ResolveCollision(indexOfA, indexOfB) { // Resolves a collision between two bodies. The collision is completely unelastic, and the bodies stick together, and reduce in size, as small fragments are ejected.
   //console.log("Collision between " + simulation.all[indexOfA].name + " and " + simulation.all[indexOfB].name); // Logs the collision
-  let totalMass = simulation.all[indexOfA].mass + simulation.all[indexOfB].mass; // Total mass of the two bodies
+  let totalMass = simulation.all[indexOfA].mass + simulation.all[indexOfB].mass; // Total mass of the two bodies'
   let finalVelocityVector = [ // the final velocity vector of the two bodies, after collision
     (simulation.all[indexOfA].mass * simulation.all[indexOfA].vx + simulation.all[indexOfB].mass * simulation.all[indexOfB].vx) / (totalMass),
     (simulation.all[indexOfA].mass * simulation.all[indexOfA].vy + simulation.all[indexOfB].mass * simulation.all[indexOfB].vy) / (totalMass),
     (simulation.all[indexOfA].mass * simulation.all[indexOfA].vz + simulation.all[indexOfB].mass * simulation.all[indexOfB].vz) / (totalMass)    
   ];
-  
   let averageDensity = (simulation.all[indexOfA].density + simulation.all[indexOfB].density) / 2; // Average density of the two bodies
   let collisionEnergy = simulation.all[indexOfA].GetKineticEnergy() + simulation.all[indexOfB].GetKineticEnergy(); // Total kinetic energy of the two bodies
   let combinedGravity = simulation.all[indexOfA].GetGravitationalForce() + simulation.all[indexOfB].GetGravitationalForce();
@@ -142,24 +141,25 @@ function ResolveCollision(indexOfA, indexOfB) { // Resolves a collision between 
   let fragmentCount = Math.floor(collisionEnergy / combinedGravity);
   if (fragmentCount > 5) { fragmentCount = 5;  } // Maximum number of fragments 
   let FRAGMENTDENSITY = 1; // Density of the fragments. This is a constant, and can be ajusted after preference.
-  let FRAGMENTRADIUS = simulation.all[indexOfA].GetRadius((totalMass * 0.2)/fragmentCount); // Radius of the fragments
+  let FRAGMENTRADIUS = simulation.all[indexOfA].GetRadius((totalMass * 0.2)/fragmentCount, FRAGMENTDENSITY); // Radius of the fragments
   let finalPlanetMass = totalMass * 0.8; // Mass of the final planet
   let finalPlanetRadius = simulation.all[indexOfA].GetRadius(finalPlanetMass, averageDensity); // Radius of the final planet
 
   for (let i = 0; i < fragmentCount; i++) { // Creates the fragments
   let fragmentVector = GetRandomNormalVector(planetVector); // Generates a random normal vector, and finds the cross product between the original vector and the random vector
     new body(
-      "fragment" + i,
-      simulation.all[indexOfA].x + fragmentVector[0] * finalPlanetRadius,
-      simulation.all[indexOfA].y + fragmentVector[1] * finalPlanetRadius,
-      simulation.all[indexOfA].z + fragmentVector[2] * finalPlanetRadius,
+      "fragment: " + i,
+      simulation.all[indexOfA].x + fragmentVector[0] * finalPlanetRadius * 3,
+      simulation.all[indexOfA].y + fragmentVector[1] * finalPlanetRadius * 3,
+      simulation.all[indexOfA].z + fragmentVector[2] * finalPlanetRadius * 3,
       simulation.all[indexOfA].GetMass(FRAGMENTDENSITY, FRAGMENTRADIUS),
       FRAGMENTDENSITY,
-      finalVelocityVector[0] + fragmentVector[0] * collisionEnergy / combinedGravity,
-      finalVelocityVector[1] + fragmentVector[1] * collisionEnergy / combinedGravity,
-      finalVelocityVector[2] + fragmentVector[2] * collisionEnergy / combinedGravity
+      finalVelocityVector[0] + fragmentVector[0],
+      finalVelocityVector[1] + fragmentVector[1],
+      finalVelocityVector[2] + fragmentVector[2]
     );
   }
+
   simulation.all[indexOfA].x = planetVector[0] * planetDistance / 2; // New x coordinate of the body
   simulation.all[indexOfA].y = planetVector[1] * planetDistance / 2; // New y coordinate of the body
   simulation.all[indexOfA].z = planetVector[2] * planetDistance / 2; // New z coordinate of the body
@@ -171,6 +171,8 @@ function ResolveCollision(indexOfA, indexOfB) { // Resolves a collision between 
   simulation.all[indexOfA].vz = finalVelocityVector[2];
 
   simulation.all.splice(indexOfB, 1); // Removes the second body from the array, as it is now part of the first body
+  // the program waits for a second, before continuing, to let the user see the collision
+  setTimeout(() => { }, 1000); // Waits for a second before continuing
 }
 
 //function SavePlanetsToJSON(fileName) {
@@ -269,6 +271,7 @@ class EventManager {
     if (this.events[index] == undefined || this.events[index] == null ) { console.log("undefined event at index: " + index); return; } // Prevents undefined events
     switch (this.events[index].type) {
       case "collision": // If the event is a collision
+      console.log(simulation.all);
         ResolveCollision(eventManager.events[index].bodyA, eventManager.events[index].bodyB); // Resolves the collision
         
         break;
@@ -292,7 +295,7 @@ class Simulation {
 
   Update() { // Updates the simulation
     this.time += this.deltaT; // Increases the time by the time step
-    console.log(simulation.all);
+    //console.log(simulation.all);
     this.ApplyGravityAll(); // Applies gravity to all the bodies
     this.MovePlanets(); // Moves all the bodies
     this.ApplyCollisionAll(); // Applies collision to all the bodies
