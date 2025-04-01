@@ -23,7 +23,7 @@ let previousFocus = -1;
 
 function setFocus(newFocus) {
     previousFocus = newFocus;
-    if(newFocus < body.all.length) {
+    if(newFocus < simulation.all.length) {
         camFocus = newFocus;
     }
 }

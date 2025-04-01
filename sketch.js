@@ -18,6 +18,8 @@ let inputRadius;
 
 let inputDensity;
 
+const simulation = new Simulation(); // Creates a new simulation object
+const eventManager = new EventManager(); // Creates a new event manager object
 
 function updateSelected(){
     if(keyIsDown(keyCodes["Esc"])){
@@ -113,8 +115,8 @@ function setup() {
     menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu, createRealPlanetMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
 }
 
-let planet1 = new body(0, 0, 0, 200, 20, 0, 0, 0);
-let planet2 = new body(500, 300, 0, 10, 1, 0, 0, 7);
+new body("jorden", 0, 0, 0, 200000000, 20, 0, 0, 0);
+new body("dirten", 500, 300, 0, 10000, 10, 0, 0, 0);
 //let planet3 = new body(700, 700, 700, 200, 20, 0, 0, 0);
 
 function keyReleased() {
@@ -141,16 +143,11 @@ function draw() {
     } else{
         simulating=true;
     }
-    body.DrawPlanets();
+    simulation.DrawPlanets();
     if(simulating) {
-        // Applies the gravity to all bodies
-        body.ApplyGravityAll();
-
-        // Checks and calculates the collisions between all bodies
-        body.CheckAndResolveCollisions();
-
-        // Moves the bodies according to their velocity and acceleration
-        body.MovePlanets();
+        
+        // Update the simulation
+        simulation.Update();
         
         // Updates the camera position and focus
         updateCamera();
