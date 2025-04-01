@@ -117,7 +117,7 @@ class UIMenu{
       this.container = createDiv();
       this.buttonContainer = createDiv();
       this.menus = menus;
-      console.log(this.menus)
+      //console.log(this.menus)
       this.selected = this.menus[Object.keys(menus)[0]];
   
       this.buttonContainer.style("display", "grid");
@@ -146,7 +146,7 @@ class UIMenu{
           this.selected.show();
           }
         );
-        console.log(this.menus[name]);
+        //console.log(this.menus[name]);
         this.menus[name].hide();
         this.menus[name].parent(this.container);
         if(this.menus[name].getColor() == "rgb(255, 255, 255)"){
