@@ -21,21 +21,6 @@ let inputDensity;
 const simulation = new Simulation(); // Creates a new simulation object
 const eventManager = new EventManager(); // Creates a new event manager object
 
-function updateSelected(){
-    if(keyIsDown(keyCodes["Esc"])){
-        selectedPlanet = -1;
-    } else if(keyIsDown(keyCodes["LeftArrow"])){
-        selectedPlanet -=1
-        if(selectedPlanet < 0){
-            selectedPlanet = simulation.all.length - 1
-        }
-    } else if(keyIsDown(keyCodes["RightArrow"])){
-        selectedPlanet +=1
-        if(selectedPlanet >= simulation.all.length){
-            selectedPlanet = 0
-        }
-    }
-}
 
 function setup() { 
     createCanvas(800, 800, WEBGL); // Makes a background, and WebGL makes the background 3D
@@ -117,10 +102,10 @@ function setup() {
 
 new body("jorden", 0, 0, 0, 200000000, 20, 0, 0, 0);
 new body("dirten", 500, 300, 0, 10000, 10, 0, 0, 0);
-//let planet3 = new body(700, 700, 700, 200, 20, 0, 0, 0);
+new body("jorden", 1000, 1000, 1000, 200000000, 20, 0, 0, 0);
 
 function keyReleased() {
-    if (keyCode === keyCodes["UpArrow"]) {
+    if (keyCode === keyCodes["UpArrow"] || keyCode === keyCodes["Esc"]) {
         selectedPlanet = -1;
     } else if (keyCode === keyCodes["LeftArrow"]) {
         selectedPlanet -= 1;

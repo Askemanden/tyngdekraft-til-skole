@@ -1,7 +1,6 @@
 class body { // body is a class that represents a body in space
 
-  constructor(name, x, y, z, mass, density, vx=0, vy=0, vz=0) { // Constructor that creates the class properties
-    //this.ValidateParameters(); // Validates the parameters of the body
+  constructor(name, x, y, z, mass, density, vx=0, vy=0, vz=0, immunityTime = 0) { // Constructor that creates the class properties
     this.name = name; // Name of the body
     this.x = x;
     this.y = y;
@@ -12,7 +11,8 @@ class body { // body is a class that represents a body in space
     this.vx = vx;
     this.vy = vy;
     this.vz = vz;
-    simulation.all.push(this);
+    this.immunityTime = immunityTime; // Time the body is immune to collisions after being created. Deafault is 0, which means the body is not immune to collisions
+    this.ValidateParameters(); // Validates the parameters of the body
   }
   
   ValidateParameters() { // Validates the parameters of the body
@@ -25,11 +25,12 @@ class body { // body is a class that represents a body in space
     if (this.vx == undefined || this.vx == null) { console.log("invalid vx given"); return; } // Prevents invalid vx values
     if (this.vy == undefined || this.vy == null) { console.log("invalid vy given"); return; } // Prevents invalid vy values
     if (this.vz == undefined || this.vz == null) { console.log("invalid vz given"); return; } // Prevents invalid vz values
-    for (let i = 0; i < all.length; i++) {
+    for (let i = 0; i < simulation.all.length; i++) {
       if (simulation.all[i].name == this.name) { // Prevents adding a body with the same name as another body
         console.log("body with this name already exists"); return;
       }
     }
+    simulation.all.push(this);
   }
 
   GetRadius(mass, density = 1) { return(Math.cbrt(mass/((3/4)*3.1416*density))); } // Returns the radius of the body
@@ -80,9 +81,12 @@ class body { // body is a class that represents a body in space
   }
 
   CheckCollision(other) { // Checks if two bodies have collided
-    let distance = this.GetDistance(other);
-    if (distance < this.radius + other.radius) {
-      return true; // If the distance between the two bodies is less than the sum of their radii, they have collided
+    if (other == this) { return false; } // Prevents checking for collision with itself
+   let distance = this.GetDistance(other);
+    if (distance < this.radius + other.radius && this.immunityTime <= 0 && other.immunityTime <= 0) { // If the distance between the two bodies is less than the sum of their radii, they have collided
+      this.immunityTime = 1; // Sets the immunity time to 1, so the body is immune to collisions for 1 second
+      other.immunityTime = 1; // Sets the immunity time to 1, so the body is immune to collisions for 1 second
+      return true; // If the distance between the two bodies is less than the sum of their radii, they have collided 
     }
     return false;
   }
@@ -91,6 +95,8 @@ class body { // body is a class that represents a body in space
     this.x += this.vx;
     this.y += this.vy;
     this.z += this.vz;
+    if (this.immunityTime != 0) {this.immunityTime -= simulation.deltaT; } // Decreases the immunity time by the time step
+    if (this.immunityTime < 0) { this.immunityTime = 0; } // Prevents negative immunity time
   }
 
   DrawBody() { // Draws the body
@@ -101,7 +107,6 @@ class body { // body is a class that represents a body in space
     translate(-currentTranslation[0], -currentTranslation[1], -currentTranslation[2]);
     currentTranslation = [0, 0, 0];
   }
-
 }
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\ 
@@ -124,81 +129,45 @@ function GetRandomNormalVector(v) { // Generer en tilfældig vektor, og finde kr
 
 }
 
-function ResolveCollision(indexOfA, indexOfB) { // Resolves a collision between two bodies. The collision is completely unelastic, and the bodies stick together, and reduce in size, as small fragments are ejected.
-  //console.log("Collision between " + simulation.all[indexOfA].name + " and " + simulation.all[indexOfB].name); // Logs the collision
-  let totalMass = simulation.all[indexOfA].mass + simulation.all[indexOfB].mass; // Total mass of the two bodies'
-  let finalVelocityVector = [ // the final velocity vector of the two bodies, after collision
-    (simulation.all[indexOfA].mass * simulation.all[indexOfA].vx + simulation.all[indexOfB].mass * simulation.all[indexOfB].vx) / (totalMass),
-    (simulation.all[indexOfA].mass * simulation.all[indexOfA].vy + simulation.all[indexOfB].mass * simulation.all[indexOfB].vy) / (totalMass),
-    (simulation.all[indexOfA].mass * simulation.all[indexOfA].vz + simulation.all[indexOfB].mass * simulation.all[indexOfB].vz) / (totalMass)    
-  ];
-  let averageDensity = (simulation.all[indexOfA].density + simulation.all[indexOfB].density) / 2; // Average density of the two bodies
-  let collisionEnergy = simulation.all[indexOfA].GetKineticEnergy() + simulation.all[indexOfB].GetKineticEnergy(); // Total kinetic energy of the two bodies
-  let combinedGravity = simulation.all[indexOfA].GetGravitationalForce() + simulation.all[indexOfB].GetGravitationalForce();
-  let planetVector = simulation.all[indexOfA].GetVector(simulation.all[indexOfB]); // Vector pointing from planetA to planetB
-  let planetDistance = simulation.all[indexOfA].GetDistance(simulation.all[indexOfB]); // Distance between the two bodies
+//function ResolveCollision(indexOfA, indexOfB) { // Resolves a collision between two bodies. The collision is completely unelastic, and the bodies stick together, and reduce in size, as small fragments are ejected.
 
-  let fragmentCount = Math.floor(collisionEnergy / combinedGravity);
-  if (fragmentCount > 5) { fragmentCount = 5;  } // Maximum number of fragments 
-  let FRAGMENTDENSITY = 1; // Density of the fragments. This is a constant, and can be ajusted after preference.
-  let FRAGMENTRADIUS = simulation.all[indexOfA].GetRadius((totalMass * 0.2)/fragmentCount, FRAGMENTDENSITY); // Radius of the fragments
-  let finalPlanetMass = totalMass * 0.8; // Mass of the final planet
-  let finalPlanetRadius = simulation.all[indexOfA].GetRadius(finalPlanetMass, averageDensity); // Radius of the final planet
+//  simulation.all[indexOfA].x = planetVector[0] * planetDistance / 2; // New x coordinate of the body
+//  simulation.all[indexOfA].y = planetVector[1] * planetDistance / 2; // New y coordinate of the body
+//  simulation.all[indexOfA].z = planetVector[2] * planetDistance / 2; // New z coordinate of the body
+//  simulation.all[indexOfA].density = averageDensity; // New density of the body
+//  simulation.all[indexOfA].radius = finalPlanetRadius; // New radius of the body
+//  simulation.all[indexOfA].mass = finalPlanetMass; // New mass of the body
+//  simulation.all[indexOfA].vx = finalVelocityVector[0];
+//  simulation.all[indexOfA].vy = finalVelocityVector[1];
+//  simulation.all[indexOfA].vz = finalVelocityVector[2];
 
-  for (let i = 0; i < fragmentCount; i++) { // Creates the fragments
-  let fragmentVector = GetRandomNormalVector(planetVector); // Generates a random normal vector, and finds the cross product between the original vector and the random vector
-    new body(
-      "fragment: " + i,
-      simulation.all[indexOfA].x + fragmentVector[0] * finalPlanetRadius * 3,
-      simulation.all[indexOfA].y + fragmentVector[1] * finalPlanetRadius * 3,
-      simulation.all[indexOfA].z + fragmentVector[2] * finalPlanetRadius * 3,
-      simulation.all[indexOfA].GetMass(FRAGMENTDENSITY, FRAGMENTRADIUS),
-      FRAGMENTDENSITY,
-      finalVelocityVector[0] + fragmentVector[0],
-      finalVelocityVector[1] + fragmentVector[1],
-      finalVelocityVector[2] + fragmentVector[2]
-    );
-  }
+//  simulation.all.splice(indexOfB, 1); // Removes the second body from the array, as it is now part of the first body
+//}
 
-  simulation.all[indexOfA].x = planetVector[0] * planetDistance / 2; // New x coordinate of the body
-  simulation.all[indexOfA].y = planetVector[1] * planetDistance / 2; // New y coordinate of the body
-  simulation.all[indexOfA].z = planetVector[2] * planetDistance / 2; // New z coordinate of the body
-  simulation.all[indexOfA].density = averageDensity; // New density of the body
-  simulation.all[indexOfA].radius = finalPlanetRadius; // New radius of the body
-  simulation.all[indexOfA].mass = finalPlanetMass; // New mass of the body
-  simulation.all[indexOfA].vx = finalVelocityVector[0];
-  simulation.all[indexOfA].vy = finalVelocityVector[1];
-  simulation.all[indexOfA].vz = finalVelocityVector[2];
-
-  simulation.all.splice(indexOfB, 1); // Removes the second body from the array, as it is now part of the first body
-  // the program waits for a second, before continuing, to let the user see the collision
-  setTimeout(() => { }, 1000); // Waits for a second before continuing
-}
-
-//function SavePlanetsToJSON(fileName) {
+function SavePlanetsToJSON(fileName) {
   // Opret en array af planetdata
-//  let planetData = simulation.all.map(planet => ({
-//    name: planet.name,
-//    x: planet.x,
-//    y: planet.y,
-//    z: planet.z,
-//    mass: planet.mass,
-//    density: planet.density,
-//    vx: planet.vx,
-//    vy: planet.vy,
-//    vz: planet.vz
-//  }));
+  let planetData = simulation.all.map(planet => ({
+    name: planet.name,
+    x: planet.x,
+    y: planet.y,
+    z: planet.z,
+    mass: planet.mass,
+    density: planet.density,
+    vx: planet.vx,
+    vy: planet.vy,
+    vz: planet.vz
+  }));
 
   // convert to JSON
-//  let json = JSON.stringify({ planets: planetData }, null, 2);
+  let json = JSON.stringify({ planets: planetData }, null, 2);
 
   // Opret en Blob og download filen
-//  let blob = new Blob([json], { type: "application/json" });
-//  let link = document.createElement("a");
-//  link.href = URL.createObjectURL(blob);
-//  link.download = fileName;
-//  link.click();
-//}
+  let blob = new Blob([json], { type: "application/json" });
+  let link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
+}
 
 function LoadPlanetsFromJSON(filePath) {
   fetch(filePath)
@@ -291,6 +260,7 @@ class Simulation {
     this.deltaT = 100000; // Time step of the simulation. Higher numbers will make the simulation faster, but less accurate
     this.all = []; // Array that contains all the bodies in space
     this.G = 6.67430e-11; // Gravitational constant
+    this.SCALE = 1; // Scale of the simulation. -Higher  numbers means smaller bodies, and lower numbers means bigger bodies. 1 is the default value, but the calculations remain the same.
   }
 
   Update() { // Updates the simulation
@@ -298,7 +268,7 @@ class Simulation {
     //console.log(simulation.all);
     this.ApplyGravityAll(); // Applies gravity to all the bodies
     this.MovePlanets(); // Moves all the bodies
-    this.ApplyCollisionAll(); // Applies collision to all the bodies
+    //this.ApplyCollisionAll(); // Applies collision to all the bodies
     eventManager.CheckForDuplicates(); // Checks for duplicates in the events array, and deletes them
     this.TriggerEvents(); // Triggers all the events in the array
   }
@@ -333,11 +303,11 @@ class Simulation {
     }
   }
 
-  //LoadBodies(bodies) { // Loads bodies from an array
-  //  for (let i = 0; i < bodies.length; i++) {
-  //    new body(bodies[i].name, bodies[i].x, bodies[i].y, bodies[i].z, bodies[i].mass, bodies[i].density, bodies[i].vx, bodies[i].vy, bodies[i].vz); // Creates a new body with the given parameters
-  //  }
-  //}
+  LoadBodies(bodies) { // Loads bodies from an array
+    for (let i = 0; i < bodies.length; i++) {
+      new body(bodies[i].name, bodies[i].x, bodies[i].y, bodies[i].z, bodies[i].mass, bodies[i].density, bodies[i].vx, bodies[i].vy, bodies[i].vz); // Creates a new body with the given parameters
+    }
+  }
 
   ClearBodies() { // Clears the array of bodies
     this.all = [];
