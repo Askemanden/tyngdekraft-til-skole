@@ -23,7 +23,7 @@ const eventManager = new EventManager(); // Creates a new event manager object
 
 
 function setup() { 
-    createCanvas(800, 800, WEBGL); // Makes a background, and WebGL makes the background 3D
+    createCanvas(1200, 800, WEBGL); // Makes a background, and WebGL makes the background 3D
     deleteMenu = new UIMenu(
         [
             [createButton('delete').mouseClicked(()=>{
@@ -145,15 +145,17 @@ function draw() {
     } else{
         simulating=true;
     }
-    simulation.DrawPlanets();
     if(simulating) {
-        
-        // Update the simulation
-        simulation.Update();
-        
         // Updates the camera position and focus
         updateCamera();
+
+        // Update the simulation
+        simulation.Update();
     }
     setFocus(selectedPlanet);
     cameraFocus();
+    simulation.DrawPlanets();
+    
+    
+    
   }

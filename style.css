@@ -6,3 +6,15 @@ html, body {
 canvas {
   display: block;
 }
+
+.container {
+  position: absolute; /* Allows precise positioning */
+  top: 10px;         /* Distance from the top of the screen */
+  left: 500px;         /* Distance from the left of the screen */
+  display: flex;      /* Align elements horizontally */
+  gap: 10px;          /* Spacing between elements */
+}
+
+#fileInput {
+  visibility: visible; /* Ensure the file input is displayed */
+}

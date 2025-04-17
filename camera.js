@@ -71,9 +71,14 @@ function updateCamera() {
 }
 
 function cameraFocus(){
-    if(camFocus !== -1 && camFocus < simulation.all.length) {
-        if (!(cam.z-cam.centerZ >= 300 || cam.z-cam.centerZ <= -300)) {
-            cam.lookAt(simulation.all[camFocus].x, simulation.all[camFocus].y, simulation.all[camFocus].z);
-        }
+    if(camFocus !== -1 && camFocus < simulation.all.length) { 
+        // let distanceToTarget = dist(simulation.all[camFocus].x, simulation.all[camFocus].y, simulation.all[camFocus].z, cam.eyeX, cam.eyeY, cam.eyeZ);
+        // if(distanceToTarget != simulation.all[camFocus].radius*5) {
+        //     cam.move(0,0, simulation.all[camFocus].radius*5 - distanceToTarget);
+        // }
+        // grundet at cam.move forgår på non-lokal space, 
+        // så er det ikke muligt at bruge cam.move til at flytte kameraet til en bestemt afstand fra planeten 
+        // selvom det modsatte står i dokumentationen
+        cam.lookAt(simulation.all[camFocus].x, simulation.all[camFocus].y, simulation.all[camFocus].z);
     }
 }

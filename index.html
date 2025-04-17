@@ -18,8 +18,11 @@
     <script src="UIManager.js"> </script>
     <script src="camera.js"></script>
     <script src="sketch.js"></script>
-    <input type="file" id="fileInput" />
-    <button onclick="LoadPlanetsFromFile()">Load Planets</button>
-    <button onclick="SavePlanetsToJSON('planets.json')">Save Planets</button>
+    <div class="container">
+      <button onclick="LoadPlanetsFromFile()">Load Planets</button>
+      <input id="fileInput" type="file" accept=".json" />
+      <button onclick="SavePlanetsToJSON('planets.json')">Save Planets</button>
+    </div>
+  
   </body>
 </html>

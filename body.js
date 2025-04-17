@@ -11,7 +11,6 @@ class body { // body is a class that represents a body in space
     this.vx = vx;
     this.vy = vy;
     this.vz = vz;
-    this.immunityTime = immunityTime; // Time the body is immune to collisions after being created. Deafault is 0, which means the body is not immune to collisions
     this.ValidateParameters(); // Validates the parameters of the body
   }
   
@@ -74,7 +73,7 @@ class body { // body is a class that represents a body in space
     for (let i = 0; i < simulation.all.length; i++) {
       if (simulation.all[i] !== this) {
       if (this.CheckCollision(simulation.all[i])) {
-        eventManager.AddEvent("collision", this.GetIndex(this), this.GetIndex(simulation.all[i])); // Adds a collision event to the event manager
+        eventManager.AddEvent("collision", this.GetIndex(this), i); // Adds a collision event to the event manager
       } // Checks if the body has collided with another body
       }
     }
@@ -83,7 +82,7 @@ class body { // body is a class that represents a body in space
   CheckCollision(other) { // Checks if two bodies have collided
     if (other == this) { return false; } // Prevents checking for collision with itself
    let distance = this.GetDistance(other);
-    if (distance < this.radius + other.radius && this.immunityTime <= 0 && other.immunityTime <= 0) { // If the distance between the two bodies is less than the sum of their radii, they have collided
+    if (distance < this.radius + other.radius) { // If the distance between the two bodies is less than the sum of their radii, they have collided
       this.immunityTime = 1; // Sets the immunity time to 1, so the body is immune to collisions for 1 second
       other.immunityTime = 1; // Sets the immunity time to 1, so the body is immune to collisions for 1 second
       return true; // If the distance between the two bodies is less than the sum of their radii, they have collided 
@@ -233,25 +232,98 @@ class EventManager {
     }
   }
 
-  RemoveEvent(index) { if (index > -1 || index <= this.events.length) { this.events.splice(index, 1); }else { console.log("Error! Tried to remove invalid index from collision array"); return }} // Removes an event from the array
+  RemoveEvent(index) { 
+    if (index > -1 || index <= this.events.length) {
+      this.events.splice(index, 1); 
+    }else { 
+      console.log("Error! Tried to remove invalid index from collision array"); return 
+    }
+  }
 
-  TriggerEvent(index) { // The event that is triggered. Index is the index of the event in the array
-    if (index > this.events.length || index < 0) {  console.log("invalid index given, at function: TriggerEvent"); return; } // Prevents index out of bounds
-    if (this.events[index] == undefined || this.events[index] == null ) { console.log("undefined event at index: " + index); return; } // Prevents undefined events
+  TriggerEvent(index) { // Index is the index of the event in the array
+
+    if (index > this.events.length || index < 0) {
+      console.log("invalid index given, at function: TriggerEvent"); 
+      return; 
+    } // Prevents index out of bounds
+
+    if (this.events[index] == undefined || this.events[index] == null ) { 
+      console.log("undefined event at index: " + index); 
+      return; 
+      } // Prevents undefined events
+
     switch (this.events[index].type) {
       case "collision": // If the event is a collision
-      console.log(simulation.all);
-        ResolveCollision(eventManager.events[index].bodyA, eventManager.events[index].bodyB); // Resolves the collision
+        this.ResolveCollision(eventManager.events[index].bodyA, eventManager.events[index].bodyB); // Resolves the collision
         
         break;
-//    case 
-
       default:
         console.log("invalid event type: " + this.events[index].type); // Prevents invalid event types
         break;
     }
     this.RemoveEvent(index); // Removes the event from the array
   }
+
+  /**
+   * Resolves a collision between two bodies. 
+   * Collision is completely inelastic, causing bodies to stick together after collision simulating merging of bodies
+   * @param {Body} bodyA 
+   * @param {Body} bodyB 
+   * @returns {void}
+   */
+  ResolveCollision(bodyA, bodyB) {
+
+    bodyA = simulation.all[bodyA]; // Get the body object from the array
+    bodyB = simulation.all[bodyB]; // Get the body object from the array
+
+    // Calculate combined mass
+    const combinedMass = bodyA.mass + bodyB.mass;
+
+    // Calculate momentum components for both bodies
+    const momentumA = {
+        x: bodyA.vx * bodyA.mass,
+        y: bodyA.vy * bodyA.mass,
+        z: bodyA.vz * bodyA.mass
+    };
+
+    const momentumB = {
+        x: bodyB.vx * bodyB.mass,
+        y: bodyB.vy * bodyB.mass,
+        z: bodyB.vz * bodyB.mass
+    };
+
+    // Calculate total momentum in each direction
+    const totalMomentum = {
+        x: momentumA.x + momentumB.x,
+        y: momentumA.y + momentumB.y,
+        z: momentumA.z + momentumB.z
+    };
+
+    // Calculate final velocity in each direction (common velocity after collision)
+    const finalVelocity = {
+        x: totalMomentum.x / combinedMass,
+        y: totalMomentum.y / combinedMass,
+        z: totalMomentum.z / combinedMass
+    };
+
+    // Update both bodies to have the same velocity after the collision
+    bodyA.vx = finalVelocity.x;
+    bodyA.vy = finalVelocity.y;
+    bodyA.vz = finalVelocity.z;
+
+    bodyB.vx = finalVelocity.x;
+    bodyB.vy = finalVelocity.y;
+    bodyB.vz = finalVelocity.z;
+
+    console.log("Body A Mass:", bodyA.mass, "Body B Mass:", bodyB.mass);
+    console.log("Total Momentum:", totalMomentum);
+    console.log("Final Velocity:", finalVelocity);
+
+
+
+    return finalVelocity; // Return the common velocity vector for debugging or logging
+  }
+
 }
 
 class Simulation {
@@ -267,10 +339,10 @@ class Simulation {
     this.time += this.deltaT; // Increases the time by the time step
     //console.log(simulation.all);
     this.ApplyGravityAll(); // Applies gravity to all the bodies
-    this.MovePlanets(); // Moves all the bodies
-    //this.ApplyCollisionAll(); // Applies collision to all the bodies
+    this.ApplyCollisionAll(); // Applies collision to all the bodies
     eventManager.CheckForDuplicates(); // Checks for duplicates in the events array, and deletes them
     this.TriggerEvents(); // Triggers all the events in the array
+    this.MovePlanets(); // Moves all the bodies
   }
 
   DrawPlanets() {  // Draws all the planets
