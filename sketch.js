@@ -108,9 +108,26 @@ function setup() {
         ]
     )
     cam = createCamera();
+    cam.perspective(undefined, undefined, undefined, 100000);
 
+    let audio = createAudio("Lyd.mp3", () => {audio.play(); audio.loop();});
 
-    menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu, createRealPlanetMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
+    let audioMenu = new UIMenu(
+        [
+            [createButton('Turn on audio').mousePressed(()=>{
+                audio.play();
+                audio.loop();
+            }), 
+            createButton('Pause audio').mousePressed(()=>{
+                audio.pause();
+            }), 
+            createButton('Stop the audio').mousePressed(()=>{
+                audio.stop();
+            })]
+        ]
+    );
+
+    menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu, createRealPlanetMenu, audioMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
 }
 
 let planet1 = new body(0, 0, 0, 200, 20, 0, 0, 0);
