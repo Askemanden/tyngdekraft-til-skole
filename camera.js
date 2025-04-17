@@ -23,7 +23,7 @@ let previousFocus = -1;
 
 function setFocus(newFocus) {
     previousFocus = newFocus;
-    if(newFocus < body.all.length) {
+    if(newFocus < simulation.all.length) {
         camFocus = newFocus;
     }
 }
@@ -71,9 +71,9 @@ function updateCamera() {
 }
 
 function cameraFocus(){
-    if(camFocus !== -1 && camFocus < body.all.length) {
+    if(camFocus !== -1 && camFocus < simulation.all.length) {
         if (!(cam.z-cam.centerZ >= 300 || cam.z-cam.centerZ <= -300)) {
-            cam.lookAt(body.all[camFocus].x, body.all[camFocus].y, body.all[camFocus].z);
+            cam.lookAt(simulation.all[camFocus].x, simulation.all[camFocus].y, simulation.all[camFocus].z);
         }
     }
 }
