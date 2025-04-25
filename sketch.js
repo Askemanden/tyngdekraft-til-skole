@@ -57,17 +57,18 @@ function setup() {
 
     createMenu = new UIMenu( // makes a menu, where you can change a y, x, or z coordinate
         [
-            [createP('coordinates in km from center')],
+            [createP('coordinates in 1000 km from center')],
             [createP('x'), inputX, createP('y'), inputY, createP('z'), inputZ],
-            [createP('radius in meters'), inputRadius],
-            [createP('density in kilos per cubic meter'), inputDensity],
+            [createP('radius in 1000 kilometers'), inputRadius],
+            [createP('density in grams pr cubic centimeter'), inputDensity],
             [createButton('Submit').size(165).mousePressed(() => {
                 new body(
+                    "planet" + simulation.all.length,
                     parseFloat(inputX.value()),
                     parseFloat(inputY.value()),
                     parseFloat(inputZ.value()),
                     parseFloat(inputRadius.value()),
-                    parseFloat(inputDensity.value()),
+                    parseFloat(inputDensity.value())*10e12,
                     0, 0, 0
                 );
             })]
@@ -81,7 +82,7 @@ function setup() {
 
     createRealPlanetMenu = new UIMenu(
         [
-            [createP('coordinates in km from center')],
+            [createP('coordinates in 1000 km from center')],
             [createP('x'), realInputX, createP('y'), realInputY, createP('z'), realInputZ],
             [createP('planet name'), planetName],
             [createButton('Submit').size(165).mousePressed(() => {
@@ -95,7 +96,7 @@ function setup() {
         ]
     )
     cam = createCamera();
-    cam.perspective(undefined, undefined, undefined, 100000);
+    cam.perspective(undefined, undefined, 30, 150000);
 
     let audio = createAudio("Lyd.mp3", () => {audio.play(); audio.loop();});
 
@@ -114,12 +115,16 @@ function setup() {
         ]
     );
 
-    menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu, createRealPlanetMenu, audioMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
+    menus = {
+        "start": new UIMenu([[]]),
+        "delete": deleteMenu,
+        "create": createMenu,
+        "createRealPlanet": createRealPlanetMenu,
+        "audio": audioMenu
+    }
+    menuManager = new UIMenuManager(menus, [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
+    //menuManager = new UIMenuManager([new UIMenu([[]]),deleteMenu, createMenu, createRealPlanetMenu, audioMenu], [10,20], undefined, "rgb(141, 160, 211)", "rgb(97, 98, 99)", "rgb(148, 149, 149)");
 }
-
-new body("jorden", 0, 0, 0, 200000000, 20, 0, 0, 0);
-new body("dirten", 500, 300, 0, 10000, 10, 0, 0, 0);
-new body("jorden", 1000, 1000, 1000, 200000000, 20, 0, 0, 0);
 
 function keyReleased() {
     if (keyCode === keyCodes["UpArrow"] || keyCode === keyCodes["Esc"]) {
@@ -140,7 +145,7 @@ function keyReleased() {
 
 function draw() {
     background(220, 220, 220);
-    if(menuManager.selected!==menuManager.menus[0]){
+    if(menuManager.selected!==menuManager.menus["start"]){
         simulating=false;
     } else{
         simulating=true;

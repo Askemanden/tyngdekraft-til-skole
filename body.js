@@ -1,13 +1,30 @@
+
+/**
+ * @class Body
+ * 
+ * This class represents a body in space, with properties such as position, mass, density, and velocity.
+ * @property {string} name - The name of the body.
+ * @property {number} x - The x-coordinate of the body. (megameters)
+ * @property {number} y - The y-coordinate of the body. (megameters)
+ * @property {number} z - The z-coordinate of the body. (megameters)
+ * @property {number} mass - The mass of the body. (kilotons)
+ * @property {number} density - The density of the body. (kg/Mm^3 (kilotons per megameter cubed))
+ * @property {number} radius - The radius of the body, calculated from mass and density
+ * @property {number} vx - The x-component of the body's velocity. (megameters)
+ * @property {number} vy - The y-component of the body's velocity. (megameters)
+ * @property {number} vz - The z-component of the body's velocity. (megameters)
+ * 
+ */
 class body { // body is a class that represents a body in space
 
-  constructor(name, x, y, z, mass, density, vx=0, vy=0, vz=0, immunityTime = 0) { // Constructor that creates the class properties
+  constructor(name, x, y, z, radius, density, vx=0, vy=0, vz=0) { // Constructor that creates the class properties
     this.name = name; // Name of the body
     this.x = x;
     this.y = y;
     this.z = z;
     this.density = density;
-    this.radius = this.GetRadius(mass, density); // Returns the radius of the body
-    this.mass = mass
+    this.radius = radius; // Returns the radius of the body
+    this.mass = this.GetMass(this.density, this.radius); // Returns the mass of the body
     this.vx = vx;
     this.vy = vy;
     this.vz = vz;
@@ -331,7 +348,8 @@ class Simulation {
     this.time = 0; // Time of the simulation
     this.deltaT = 100000; // Time step of the simulation. Higher numbers will make the simulation faster, but less accurate
     this.all = []; // Array that contains all the bodies in space
-    this.G = 6.67430e-11; // Gravitational constant
+    this.G = 6.67430e-26; // Gravitational constant in mega meters (1000 km) and kilotons.
+    //this.G = 6.67430e-11; // Gravitational constant in mega meters (1000 km) and kilotons.
     this.SCALE = 1; // Scale of the simulation. -Higher  numbers means smaller bodies, and lower numbers means bigger bodies. 1 is the default value, but the calculations remain the same.
   }
 

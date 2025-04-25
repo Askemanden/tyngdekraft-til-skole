@@ -14,7 +14,7 @@ function processData(x,y,z,data){
     console.log(data);
     data = data["bodies"][0];
     console.log(data);
-    new body(x,y,z,data.meanRadius*1000,data.density*1000);
+    new body(x,y,z,data.meanRadius/1000,data.density*10e12);
 }
 
 function fetchData(planetName,x,y,z){
