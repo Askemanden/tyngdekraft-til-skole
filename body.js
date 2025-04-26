@@ -18,7 +18,6 @@
 class body { // body is a class that represents a body in space
 
   constructor(name, x, y, z, radius, density, vx=0, vy=0, vz=0) { // Constructor that creates the class properties
-    console.log(name, x, y, z, radius, density, vx, vy, vz);
     this.name = name; // Name of the body
     this.x = x;
     this.y = y;
@@ -333,11 +332,6 @@ class EventManager {
     bodyB.vy = finalVelocity.y;
     bodyB.vz = finalVelocity.z;
 
-    console.log("Body A Mass:", bodyA.mass, "Body B Mass:", bodyB.mass);
-    console.log("Total Momentum:", totalMomentum);
-    console.log("Final Velocity:", finalVelocity);
-
-
 
     return finalVelocity; // Return the common velocity vector for debugging or logging
   }
@@ -347,7 +341,7 @@ class EventManager {
 class Simulation {
   constructor() { // Constructor that creates the class properties
     this.time = 0; // Time of the simulation
-    this.deltaT = 100000; // Time step of the simulation. Higher numbers will make the simulation faster, but less accurate
+    this.deltaT = 1500000; // Time step of the simulation. Higher numbers will make the simulation faster, but less accurate
     this.all = []; // Array that contains all the bodies in space
     this.G = 6.67430e-26; // Gravitational constant in mega meters (1000 km) and kilotons.
     //this.G = 6.67430e-11; // Gravitational constant in mega meters (1000 km) and kilotons.

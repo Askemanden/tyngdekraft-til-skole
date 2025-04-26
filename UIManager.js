@@ -136,7 +136,6 @@ class UIMenu{
   
         button.mousePressed(
           () => {
-          console.log(this.selected)
           this.selected.hide();
           for(let button of this.buttonContainer.elt.children){
             button.style.backgroundColor = this.buttonColor;
