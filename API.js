@@ -18,7 +18,6 @@ function processData(x,y,z,data){
 }
 
 function fetchData(planetName,x,y,z){
-    console.log(apiAddress + planetName);
     loadJSON(apiAddress + planetName, data =>{
         processData(x,y,z,data);
     });
