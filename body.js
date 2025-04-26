@@ -18,12 +18,12 @@
 class body { // body is a class that represents a body in space
 
   constructor(name, x, y, z, radius, density, vx=0, vy=0, vz=0) { // Constructor that creates the class properties
+    console.log(name, x, y, z, radius, density, vx, vy, vz);
     this.name = name; // Name of the body
     this.x = x;
     this.y = y;
     this.z = z;
     this.density = density;
-    console.log("density: " + this.density);
     this.radius = radius; // Returns the radius of the body
     this.mass = this.GetMass(this.density, this.radius); // Returns the mass of the body
     this.vx = vx;

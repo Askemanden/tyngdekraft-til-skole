@@ -12,7 +12,7 @@ function processData(x,y,z,data){
         return
     }
     values = data["bodies"][0];
-    new body(values.englishName,x,y,z,data.meanRadius/1000,data.density*10e12);
+    new body("body" + values.englishName,x,y,z,values.meanRadius/1000,values.density*10e12);
 }
 
 function fetchData(planetName,x,y,z){
