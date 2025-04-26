@@ -167,7 +167,7 @@ function SavePlanetsToJSON(fileName) {
     x: planet.x,
     y: planet.y,
     z: planet.z,
-    mass: planet.mass,
+    radius: planet.radius,
     density: planet.density,
     vx: planet.vx,
     vy: planet.vy,
@@ -390,7 +390,7 @@ class Simulation {
 
   LoadBodies(bodies) { // Loads bodies from an array
     for (let i = 0; i < bodies.length; i++) {
-      new body(bodies[i].name, bodies[i].x, bodies[i].y, bodies[i].z, bodies[i].mass, bodies[i].density, bodies[i].vx, bodies[i].vy, bodies[i].vz); // Creates a new body with the given parameters
+      new body(bodies[i].name, bodies[i].x, bodies[i].y, bodies[i].z, bodies[i].radius, bodies[i].density, bodies[i].vx, bodies[i].vy, bodies[i].vz); // Creates a new body with the given parameters
     }
   }
 
