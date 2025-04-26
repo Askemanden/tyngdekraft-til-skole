@@ -11,8 +11,8 @@ function processData(x,y,z,data){
     if(!checkData(data)){
         return
     }
-    data = data["bodies"][0];
-    new body(x,y,z,data.meanRadius/1000,data.density*10e12);
+    values = data["bodies"][0];
+    new body(values.englishName,x,y,z,data.meanRadius/1000,data.density*10e12);
 }
 
 function fetchData(planetName,x,y,z){

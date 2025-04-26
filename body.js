@@ -23,6 +23,7 @@ class body { // body is a class that represents a body in space
     this.y = y;
     this.z = z;
     this.density = density;
+    console.log("density: " + this.density);
     this.radius = radius; // Returns the radius of the body
     this.mass = this.GetMass(this.density, this.radius); // Returns the mass of the body
     this.vx = vx;
@@ -37,7 +38,7 @@ class body { // body is a class that represents a body in space
     if (this.y == undefined || this.y == null) { console.log("invalid y given"); return; } // Prevents invalid y values
     if (this.z == undefined || this.z == null) { console.log("invalid z given"); return; } // Prevents invalid z values
     if (this.mass == undefined || this.mass == null || this.mass < 0) { console.log("invalid mass given"); return; } // Prevents invalid mass values
-    if (this.density == undefined || this.density == null || this.density < 0) { console.log("invalid density given"); return; } // Prevents invalid density values
+    if (this.density == undefined || this.density == null || this.density < 0) { console.log("invalid density given" + this.density); return; } // Prevents invalid density values
     if (this.vx == undefined || this.vx == null) { console.log("invalid vx given"); return; } // Prevents invalid vx values
     if (this.vy == undefined || this.vy == null) { console.log("invalid vy given"); return; } // Prevents invalid vy values
     if (this.vz == undefined || this.vz == null) { console.log("invalid vz given"); return; } // Prevents invalid vz values
