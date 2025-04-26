@@ -12,7 +12,6 @@ function processData(x,y,z,data){
         return
     }
     data = data["bodies"][0];
-    console.log(data);
     new body(x,y,z,data.meanRadius/1000,data.density*10e12);
 }
 
