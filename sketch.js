@@ -165,7 +165,6 @@ function draw() {
         simulating=false;
     } else{
         simulating=true;
-        console.log("simulating")
     }
     if(simulating) {
         // Updates the camera position and focus
