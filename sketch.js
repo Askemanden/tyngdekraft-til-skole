@@ -55,12 +55,18 @@ function setup() {
     inputRadius = createInput(0, 'number').size(75)
     inputDensity = createInput(0,'number').size(75)
 
+    let inputVX = createInput(0, 'number').size(75)
+    let inputVY = createInput(0, 'number').size(75)
+    let inputVZ = createInput(0, 'number').size(75)
+
     createMenu = new UIMenu( // makes a menu, where you can change a y, x, or z coordinate
         [
             [createP('coordinates in 1000 km from center')],
             [createP('x'), inputX, createP('y'), inputY, createP('z'), inputZ],
             [createP('radius in 1000 kilometers'), inputRadius],
             [createP('density in grams pr cubic centimeter'), inputDensity],
+            [createP('velocity in 1000 km/s')],
+            [createP('vx'), inputVX, createP('vy'), inputVY, createP('vz'), inputVZ],
             [createButton('Submit').size(165).mousePressed(() => {
                 new body(
                     "planet" + simulation.all.length,
@@ -69,7 +75,9 @@ function setup() {
                     parseFloat(inputZ.value()),
                     parseFloat(inputRadius.value()),
                     parseFloat(inputDensity.value())*10e12,
-                    0, 0, 0
+                    parseFloat(inputVX.value()),
+                    parseFloat(inputVY.value()),
+                    parseFloat(inputVZ.value())
                 );
             })]
         ]
@@ -78,6 +86,9 @@ function setup() {
     let realInputX = createInput(0, 'number').size(75)
     let realInputY = createInput(0, 'number').size(75)
     let realInputZ = createInput(0, 'number').size(75)
+    let realInputVX = createInput(0, 'number').size(75)
+    let realInputVY = createInput(0, 'number').size(75)
+    let realInputVZ = createInput(0, 'number').size(75)
     let planetName = createInput().size(75)
 
     createRealPlanetMenu = new UIMenu(
@@ -85,12 +96,17 @@ function setup() {
             [createP('coordinates in 1000 km from center')],
             [createP('x'), realInputX, createP('y'), realInputY, createP('z'), realInputZ],
             [createP('planet name'), planetName],
+            [createP('velocity in 1000 km/s')],
+            [createP('vx'), realInputVX, createP('vy'), realInputVY, createP('vz'), realInputVZ],
             [createButton('Submit').size(165).mousePressed(() => {
                 fetchData(
                     planetName.value(),
                     parseFloat(realInputX.value()),
                     parseFloat(realInputY.value()),
-                    parseFloat(realInputZ.value())
+                    parseFloat(realInputZ.value()),
+                    parseFloat(realInputVX.value()),
+                    parseFloat(realInputVY.value()),
+                    parseFloat(realInputVZ.value())
                 );
             })]
         ]
@@ -149,6 +165,7 @@ function draw() {
         simulating=false;
     } else{
         simulating=true;
+        console.log("simulating")
     }
     if(simulating) {
         // Updates the camera position and focus
